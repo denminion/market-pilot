@@ -1,0 +1,33 @@
+name: Update Market Pilot
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"   # кожні 20 хвилин
+  workflow_dispatch:          # дозволяє запускати вручну
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Market Pilot
+        run: python main.py
+
+      - name: Commit updated index.html
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automatic Market Pilot update"
